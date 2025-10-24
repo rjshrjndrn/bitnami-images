@@ -74,12 +74,10 @@ jobs:
 
       - name: Build container
         run: |
-          ls -la
-          ls -la containers
-          echo containers/bitnami/${{ matrix.container }}
           cd containers/bitnami/${{ matrix.container }}
           APP=$(echo ${{ matrix.container }} | cut -d/ -f1)
-          TAG=$(echo ${{ matrix.container }} | cut -d/ -f3)
+          TAG=$(echo ${{ matrix.container }} | rev | cut -d/ -f1 | rev)
+          echo "Building rjshrjndrn/$APP:$TAG"
           docker build -t rjshrjndrn/$APP:$TAG .
           docker tag rjshrjndrn/$APP:$TAG rjshrjndrn/$APP:latest
 
@@ -91,7 +89,7 @@ jobs:
       - name: Push Docker image
         run: |
           APP=$(echo ${{ matrix.container }} | cut -d/ -f1)
-          TAG=$(echo ${{ matrix.container }} | cut -d/ -f3)
+          TAG=$(echo ${{ matrix.container }} | rev | cut -d/ -f1 | rev)
           docker push rjshrjndrn/$APP:$TAG
           docker push rjshrjndrn/$APP:latest
 
