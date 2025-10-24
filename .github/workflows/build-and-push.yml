@@ -74,7 +74,7 @@ jobs:
 
       - name: Build container
         run: |
-          cd containers/${{ matrix.container }}/rootfs
+          cd containers/${{ matrix.container }}
           APP=$(echo ${{ matrix.container }} | cut -d/ -f2)
           TAG=$(echo ${{ matrix.container }} | cut -d/ -f4)
           docker build -t rjshrjndrn/$APP:$TAG .
