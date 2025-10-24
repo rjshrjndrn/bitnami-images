@@ -42,10 +42,10 @@ jobs:
           cd containers
           if [ -z "$PREV_SHA" ]; then
             # First run, build all containers
-            flavors=$(find bitnami -mindepth 3 -maxdepth 3 -type d | sed 's|^bitnami/||' | sort | uniq)
+            flavors=($(find bitnami -mindepth 4 -maxdepth 4 -type d | sed 's|^bitnami/||' | sort | uniq | head -250))
           else
             changed_files=$(git diff --name-only $PREV_SHA $LATEST_SHA || echo "")
-            flavors=$(echo "$changed_files" | xargs dirname 2>/dev/null | grep -o "^bitnami/[^/]*/[^/]*/[^/]*" | sort | uniq || true)
+            flavors=($(echo "$changed_files" | xargs dirname 2>/dev/null | grep -o "^bitnami/[^/]*/[^/]*/[^/]*" | sort | uniq | head -250 || true))
           fi
           if [[ -z "$flavors" ]]; then
             echo "result=skip" >> $GITHUB_OUTPUT
