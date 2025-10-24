@@ -76,10 +76,10 @@ jobs:
         run: |
           ls -la
           ls -la containers
-          echo containers/${{ matrix.container }}
-          cd containers/${{ matrix.container }}
-          APP=$(echo ${{ matrix.container }} | cut -d/ -f2)
-          TAG=$(echo ${{ matrix.container }} | cut -d/ -f4)
+          echo containers/bitnami/${{ matrix.container }}
+          cd containers/bitnami/${{ matrix.container }}
+          APP=$(echo ${{ matrix.container }} | cut -d/ -f1)
+          TAG=$(echo ${{ matrix.container }} | cut -d/ -f3)
           docker build -t rjshrjndrn/$APP:$TAG .
           docker tag rjshrjndrn/$APP:$TAG rjshrjndrn/$APP:latest
 
@@ -89,10 +89,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push Docker image
-
         run: |
-          APP=$(echo ${{ matrix.container }} | cut -d/ -f2)
-          TAG=$(echo ${{ matrix.container }} | cut -d/ -f4)
+          APP=$(echo ${{ matrix.container }} | cut -d/ -f1)
+          TAG=$(echo ${{ matrix.container }} | cut -d/ -f3)
           docker push rjshrjndrn/$APP:$TAG
           docker push rjshrjndrn/$APP:latest
 
