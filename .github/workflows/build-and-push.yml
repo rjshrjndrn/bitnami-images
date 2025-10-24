@@ -40,8 +40,13 @@ jobs:
         run: |
           git clone https://github.com/bitnami/containers.git --depth 1
           cd containers
-          changed_files=$(git diff --name-only ${{ env.PREV_SHA }} ${{ env.LATEST_SHA }} || echo "")
-          flavors=$(echo "$changed_files" | xargs dirname 2>/dev/null | grep -o "^bitnami/[^/]*/[^/]*/[^/]*" | sort | uniq || true)
+          if [ -z "$PREV_SHA" ]; then
+            # First run, build all containers
+            flavors=$(find bitnami -mindepth 3 -maxdepth 3 -type d | sed 's|^bitnami/||' | sort | uniq)
+          else
+            changed_files=$(git diff --name-only $PREV_SHA $LATEST_SHA || echo "")
+            flavors=$(echo "$changed_files" | xargs dirname 2>/dev/null | grep -o "^bitnami/[^/]*/[^/]*/[^/]*" | sort | uniq || true)
+          fi
           if [[ -z "$flavors" ]]; then
             echo "result=skip" >> $GITHUB_OUTPUT
           else
