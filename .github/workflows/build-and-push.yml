@@ -76,9 +76,10 @@ jobs:
         run: |
           cd containers/bitnami/${{ matrix.container }}
           APP=$(echo ${{ matrix.container }} | cut -d/ -f1)
-          TAG=$(echo ${{ matrix.container }} | rev | cut -d/ -f1 | rev)
+          TAG=$(echo ${{ matrix.container }} | cut -d/ -f3)
+          APP_VERSION=$(echo ${{ matrix.container }} | cut -d/ -f2)
           echo "Building rjshrjndrn/$APP:$TAG"
-          docker build -t rjshrjndrn/$APP:$TAG .
+          docker build -t rjshrjndrn/$APP:$APP_VERSION .
           docker tag rjshrjndrn/$APP:$TAG rjshrjndrn/$APP:latest
 
       - name: Login to Docker Hub
@@ -89,8 +90,8 @@ jobs:
       - name: Push Docker image
         run: |
           APP=$(echo ${{ matrix.container }} | cut -d/ -f1)
-          TAG=$(echo ${{ matrix.container }} | rev | cut -d/ -f1 | rev)
-          docker push rjshrjndrn/$APP:$TAG
+          APP_VERSION=$(echo ${{ matrix.container }} | cut -d/ -f2)
+          docker push rjshrjndrn/$APP:$APP_VERSION
           docker push rjshrjndrn/$APP:latest
 
       - name: Update SHA
