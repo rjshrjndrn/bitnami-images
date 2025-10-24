@@ -74,6 +74,9 @@ jobs:
 
       - name: Build container
         run: |
+          ls -la
+          ls -la containers
+          echo containers/${{ matrix.container }}
           cd containers/${{ matrix.container }}
           APP=$(echo ${{ matrix.container }} | cut -d/ -f2)
           TAG=$(echo ${{ matrix.container }} | cut -d/ -f4)
